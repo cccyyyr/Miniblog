@@ -1,0 +1,22 @@
+{% if author %}
+    {% block title %} <h1>{{ author }}'s Posts </h1>{% endblock %}
+    {% block content %}
+    {% if user.is_authenticated %}
+        {% if post_list %}
+        <ul>
+        {% for Post in post_list%}
+            <li>{{Post.author}}: {{Post.post_text}}</li>
+        {% endfor %}
+        </ul>
+        {% else %}
+            <p>No blogs are available.</p>
+        {% endif %}
+        <hr>
+        <a href="{% url 'viewMy' %}">View My Post</a>
+        <p><a href="{% url 'home' %}">return</a></p>
+    {% else %}
+      <p>You are not logged in</p>
+      <a href="{% url 'login' %}">login</a>
+    {% endif %}
+    {% endblock %}
+{% endif %}

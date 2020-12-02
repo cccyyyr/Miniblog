@@ -4,8 +4,11 @@
     {% if post_list %}
     <ul>
     {% for p in post_list%}
-        <li>{{p.author}}: {{p.post_text}} | # of Likes: {{p.likes}}</li>
+        <li><a href="{% url 'viewOthers' p.author.id%}">{{p.author}}</a>: {{p.post_text}} | # of Likes: {{p.likes}}</li>
         <a href="{% url 'like' p.id %}">Like This Post</a>
+        {% if user == p.author %}
+            <a href="{% url 'delete' p.id %}">Delete</a>
+        {% endif %}
         <a href="{% url 'comment' p.id %}">Comment on This Post</a>
         <p>Comments:</p>
         {% for com in p.comment_set.all%}
@@ -15,6 +18,16 @@
     </ul>
     {% else %}
         <p>No blogs are available.</p>
+    {% endif %}
+     <p>HashTags</p>
+    {% if tag_list %}
+    <ul>
+    {% for tag in tag_list%}
+        <li><a href="{% url 'viewTag' tag.id %}">{{tag}}</a>
+    {% endfor %}
+    </ul>
+    {% else %}
+        <p>No tags yet. Make some!</p>
     {% endif %}
     <hr>
     <a href="{% url 'create' %}">Create New Post</a> <a href="{% url 'viewMy' %}">View My Post</a>
