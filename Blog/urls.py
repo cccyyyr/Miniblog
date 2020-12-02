@@ -3,10 +3,11 @@ from . import views
 from django.urls import path, include
 
 urlpatterns = [
+    path('', views.splash, name='splash'),
     path('admin/', admin.site.urls),
     path('accounts/signup/', views.SignUp.as_view(), name = 'signup'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('', views.home, name = 'home'),
+    path('/home', views.home, name='home'),
     path('create/', views.create, name = 'create'),
     path('viewmypost/', views.viewmy, name = 'viewMy'),
     path('viewotherspost/<author_id>', views.viewothers, name='viewOthers'),

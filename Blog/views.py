@@ -14,6 +14,8 @@ from django.http import HttpResponseRedirect
 from .forms import PostForm, UserRegisterForm, CommentForm
 
 
+def splash(request):
+    return render(request, 'registration/splash.html')
 
 def create(request):
     if request.method == "POST":
@@ -75,7 +77,7 @@ def like_post(request, post_id=None):
     post_to_like = Post.objects.get(id=post_id)
     post_to_like.likes += 1
     post_to_like.save()
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def comment(request, post_id=None):
     if request.method == "POST":
