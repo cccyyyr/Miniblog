@@ -18,7 +18,6 @@ class CommentForm(forms.ModelForm):
         fields = ('comment_text',)
 
 
-
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
     first_name = forms.CharField(max_length=20)

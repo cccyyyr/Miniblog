@@ -1,10 +1,10 @@
-from .models import Post, HashTag
+from .models import Post, HashTag, Liked
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout, authenticate, login
 from django. contrib import messages
-
+import re
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse, reverse_lazy
 from django.views import generic
@@ -24,17 +24,20 @@ def create(request):
             post = form.save(commit=False)
             post.author = request.user
             post.pub_date = timezone.now()
-            tags = post.post_text.split("#")[1:]
+            sentences = post.post_text.split(" ")
             post.save()
-            for tag in tags:
-                ht = HashTag.objects.filter(tag_text=tag)
-                if ht.count() > 0:
-                    post.tags.add(ht[0])
-                else:
-                    ht = HashTag()
-                    ht.tag_text = tag
-                    ht.save()
-                    post.tags.add(ht)
+            for sentence in sentences:
+                tags = sentence.split("#")[1:]
+                for t in tags:
+                    ht = HashTag.objects.filter(tag_text=t)
+                    if ht.count() > 0:
+                        post.tags.add(ht[0])
+                    else:
+                        ht = HashTag()
+                        ht.tag_text = t
+                        ht.save()
+                        post.tags.add(ht)
+                        ht.save()
             post.save()
             return redirect(home)
     else:
@@ -75,7 +78,17 @@ def delete_post(request, post_id=None):
 
 def like_post(request, post_id=None):
     post_to_like = Post.objects.get(id=post_id)
-    post_to_like.likes += 1
+    user = request.user
+    if Liked.objects.filter(post=post_to_like, user=user).count() > 0:
+        post_to_like.likes -= 1
+        relation = Liked.objects.filter(post=post_to_like, user=user)[0]
+        relation.delete()
+    else:
+        post_to_like.likes += 1
+        relation = Liked()
+        relation.post = post_to_like
+        relation.user = user
+        relation.save()
     post_to_like.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

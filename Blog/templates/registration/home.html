@@ -4,12 +4,13 @@
     {% if post_list %}
     <ul>
     {% for p in post_list%}
-        <li><a href="{% url 'viewOthers' p.author.id%}">{{p.author}}</a>: {{p.post_text}} | # of Likes: {{p.likes}}</li>
-        <a href="{% url 'like' p.id %}">Like This Post</a>
+        <li><a href="{% url 'viewOthers' p.author.id%}">{{p.author}}</a> | {{ p.pub_date }}</li>
+        {{p.post_text}}
+        <br><a href="{% url 'like' p.id %}">Like({{ p.likes }}) </a>
         {% if user == p.author %}
             <a href="{% url 'delete' p.id %}">Delete</a>
-        {% endif %}
-        <a href="{% url 'comment' p.id %}">Comment on This Post</a>
+        {% endif %} </br>
+        <br><a href="{% url 'comment' p.id %}">Comment on This Post</a></br>
         <p>Comments:</p>
         {% for com in p.comment_set.all%}
             <ul style="list-style-type:disc;">{{com.author}}: {{com.comment_text}} </ul>
