@@ -96,4 +96,5 @@ def tag(request, tag_id=None):
     tag = HashTag.objects.get(id=tag_id)
     posts = tag.post_set.all()
     tag_name = tag.tag_text
-    return render(request, 'blog/viewtag.html', {'post_list': posts})
+    return render(request, 'blog/viewtag.html', {'post_list': posts,
+                                                 'tag_text': tag_name})
